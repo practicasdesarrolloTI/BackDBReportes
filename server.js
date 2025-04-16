@@ -42,11 +42,11 @@ app.get('/api/pacientes/indicadores/:tipo/:documento', (req, res) => {
       identificacion,
       "Talla1" AS Altura,
       "Peso1" AS Peso,
-      "Tension Arterial Sistolica Control",
-      "Tension Arterial Diastolica Control",
-      "Perimetro Abdominal Control",
-      "Colesterol Total1",
-      "HDL (mg/dl) Control"
+      "Tension Arterial Sistolica Control" AS Tension_Arterial_Sistolica,
+      "Tension Arterial Diastolica Control" AS Tension_Arterial_Diastolica,
+      "Perimetro Abdominal Control" AS Perimetro_Abdominal,
+      "Colesterol Total1" AS Colesterol_Total,
+      "HDL (mg/dl) Control" AS HDL
     FROM datos_pacientes
     WHERE
     tipo_documento = ?
