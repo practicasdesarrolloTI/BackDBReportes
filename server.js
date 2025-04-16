@@ -35,13 +35,13 @@ app.get('/api/pacientes/:tipo/:documento', (req, res) => {
 
 // Modulo de Autocuidado
 
-app.get('/api/pacientes/indicadores/tipo:/:documento', (req, res) => {
+app.get('/api/pacientes/indicadores/:tipo/:documento', (req, res) => {
   const { tipo, documento } = req.params;
   const query = `
     SELECT DISTINCT
       identificacion,
-      "Talla1",
-      "Peso1",
+      "Talla1" AS Altura,
+      "Peso1" AS Peso,
       "Tension Arterial Sistolica Control",
       "Tension Arterial Diastolica Control",
       "Perimetro Abdominal Control",
@@ -77,6 +77,7 @@ app.get('/api/citas/:tipo/:documento', (req, res) => {
     FROM datos_pacientes
     WHERE tipo_documento = ?
       AND identificacion = ?
+      AND fecha_cita IS NOT NULL
     ORDER BY fecha_cita DESC
   `;
 
@@ -98,6 +99,7 @@ app.get('/api/programas/:tipo/:documento', (req, res) => {
     SELECT DISTINCT
       tipo_documento,
       identificacion,
+      "Programa Actual" AS Programa,
       fecha_cita,
       "Nombre Medico" AS nombre_medico,
       especialidad,
@@ -106,6 +108,7 @@ app.get('/api/programas/:tipo/:documento', (req, res) => {
     WHERE
     tipo_documento = ?
      AND identificacion = ?
+     AND fecha_cita IS NOT NULL
     ORDER BY fecha_cita ASC;
   `;
 
