@@ -95,7 +95,7 @@ app.get('/api/programas/:tipo/:documento', (req, res) => {
   const { tipo, documento } = req.params;
 
   const query = `
-    SELECT
+    SELECT DISTINCT
       tipo_documento,
       identificacion,
       fecha_cita,
@@ -123,7 +123,7 @@ app.get('/api/examenes/:tipo/:documento', (req, res) => {
   const { tipo, documento } = req.params;
 
   const query = `
-    SELECT
+    SELECT DISTINCT
       tipo_documento,
       identificacion,
       nom_medico_remisor,
