@@ -108,7 +108,6 @@ app.get('/api/programas/:tipo/:documento', (req, res) => {
     WHERE
     tipo_documento = ?
      AND identificacion = ?
-     AND fecha_cita IS NOT NULL
     ORDER BY fecha_cita ASC;
   `;
 
