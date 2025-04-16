@@ -1,0 +1,15 @@
+{
+  "name": "sqlite-backend-ejemplo",
+  "version": "1.0.0",
+  "description": "Backend Express + SQLite para pruebas con datos de pacientes",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^3.1.9",
+    "sqlite3": "^5.1.6"
+  }
+}
