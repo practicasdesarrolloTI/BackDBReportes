@@ -1,11 +1,9 @@
-
 const express = require('express');
 const db = require('./database.js');
-
+const PDFDocument = require('pdfkit');
 
 const app = express();
 const port = 8000;
-
 
 // Ruta: obtener todos los pacientes (primeros 100)
 app.get('/api/pacientesALL', (req, res) => {
@@ -180,6 +178,70 @@ app.get('/api/medicamentos/:tipo/:documento', (req, res) => {
     res.json(rows);
   });
 });
+
+app.get('/api/orden-medicamentos/:tipo/:documento', (req, res) => {
+  const { tipo, documento } = req.params;
+
+  // const queryPaciente = `
+  //   SELECT DISTINCT
+  //     nombre_paciente AS nombre,
+  //     tipo_documento,
+  //     identificacion,
+  //     edad,
+  //     "Programa Actual" AS programa,
+  //     "Nombre Medico" AS medico
+  //   FROM datos_pacientes
+  //   WHERE tipo_documento = ? AND identificacion = ?
+  //   LIMIT 1
+  // `;
+
+  const queryMedicamentos = `
+    SELECT DISTINCT
+      nom_med AS nombre_medicamento,
+      pre_med AS prescripcion_medicamento,
+      cant AS cantidad,
+      Fecha_med AS fecha_vigencia
+    FROM datos_pacientes
+    WHERE tipo_documento = ? AND identificacion = ? AND nom_med IS NOT NULL
+    ORDER BY Fecha_med DESC
+  `;
+
+  // db.get(queryPaciente, [tipo, documento], (err, paciente) => {
+  //   if (err) return res.status(500).json({ error: err.message });
+  //   if (!paciente) return res.status(404).json({ message: 'Paciente no encontrado' });
+
+    db.all(queryMedicamentos, [tipo, documento], (err, medicamentos) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!medicamentos.length) return res.status(404).json({ message: 'No se encontraron medicamentos' });
+
+      // 🚀 Generar el PDF
+      const doc = new PDFDocument();
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=orden_medicamentos_${documento}.pdf`);
+      doc.pipe(res);
+
+      // 📝 Datos del paciente
+      doc.fontSize(18).text('ORDEN DE MEDICAMENTOS', { align: 'center' }).moveDown();
+      doc.fontSize(12);
+      doc.text(`Paciente: ${"No disponible"}`);
+      doc.text(`Documento: ${"No disponible"}`);
+      doc.text(`Edad: ${"No disponible"}`);
+      doc.text(`Programa: ${ "No disponible"}`);
+      doc.text(`Médico: ${"No disponible"}`);
+      doc.moveDown();
+
+      // 📝 Medicamentos
+      doc.text('Medicamentos:', { underline: true });
+      medicamentos.forEach((med, idx) => {
+        doc.text(`${idx + 1}. ${med.nombre_medicamento ?? "No disponible"} - ${med.prescripcion_medicamento ?? ""}`);
+        doc.text(`   Cantidad: ${med.cantidad ?? "No disponible"}`);
+        doc.text(`   Fecha Orden: ${med.fecha_vigencia?.split(' ')[0] ?? "No disponible"}`);
+        doc.moveDown();
+      });
+
+      doc.end();
+    });
+  });
 
 
 
