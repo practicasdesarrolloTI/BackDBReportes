@@ -128,6 +128,7 @@ app.get('/api/examenes/:tipo/:documento', (req, res) => {
       identificacion,
       nom_medico_remisor,
       fecha_orden,
+      codigo_cups AS Codigo,
       nombre_cups AS Examen
     FROM datos_pacientes
     WHERE
@@ -135,6 +136,7 @@ app.get('/api/examenes/:tipo/:documento', (req, res) => {
       AND
       identificacion = ?
       AND nombre_cups IS NOT NULL
+      AND codigo_cups LIKE '9%'
     ORDER BY fecha_orden DESC
   `;
 
@@ -157,7 +159,6 @@ app.get('/api/medicamentos/:tipo/:documento', (req, res) => {
       tipo_documento,
       identificacion,
       "Nombre Medico" AS medico,
-      nom_medico_remisor AS medico_remisor,
       nom_med AS nombre_medicamento,
       pre_med AS prescripcion_medicamento,
       cant AS Cantidad,
