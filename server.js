@@ -87,6 +87,30 @@ app.get('/api/citas/:tipo/:documento', (req, res) => {
   });
 });
 
+app.get('/api/citasGlobal', (req, res) => {
+
+  const query = `
+    SELECT DISTINCT
+  tipo_documento,
+  identificacion,
+  "Nombre Medico" AS nombre_medico,
+      especialidad,
+      "Especialidad Cita" AS especialidad_cita,
+  COUNT(*) AS cantidad_citas
+FROM datos_pacientes
+WHERE fecha_cita IS NOT NULL
+GROUP BY tipo_documento, identificacion
+ORDER BY cantidad_citas DESC;
+  `;
+
+  db.all(query, (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!rows || rows.length === 0)
+      return res.status(404).json({ message: 'No se encontraron citas para el paciente' });
+    res.json(rows);
+  });
+});
+
 // Modulo de Programas
 // Ruta: obtener todas las citas por programa de un paciente por tipo y documento (En Proceso)
 
