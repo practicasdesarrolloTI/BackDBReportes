@@ -70,6 +70,7 @@ app.get('/api/citas/:tipo/:documento', (req, res) => {
       identificacion,
       estado,
       fecha_cita,
+      turno as hora_cita,
       "Nombre Medico" AS nombre_medico,
       especialidad
     FROM datos_pacientes
@@ -123,6 +124,7 @@ app.get('/api/programas/:tipo/:documento', (req, res) => {
       identificacion,
       "Programa Actual" AS Programa,
       fecha_cita,
+      turno as hora_cita,
       "Nombre Medico" AS nombre_medico,
       especialidad,
       "Especialidad Cita" AS especialidad_cita
