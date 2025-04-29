@@ -162,7 +162,8 @@ app.get('/api/examenes/:tipo/:documento', (req, res) => {
       AND
       identificacion = ?
       AND nombre_cups IS NOT NULL
-      AND codigo_cups LIKE '9%'
+      AND codigo_cups IS NOT NULL
+      AND codigo_cups LIKE '90%'
     ORDER BY fecha_orden DESC
   `;
 
