@@ -3,12 +3,13 @@ const db = require('./database.js');
 const PDFDocument = require('pdfkit');
 
 const app = express();
-const port = 8000;
+const port = 3001;
 
 // Ruta: obtener todos los pacientes (primeros 100)
-app.get('/api/pacientesALL', (req, res) => {
-  const query = 'SELECT * FROM datos_pacientes LIMIT 100';
-  db.all(query, [], (err, rows) => {
+app.get('/api/pacientesALL/:limit', (req, res) => {
+  const {limit} = req.params;
+  const query = 'SELECT * FROM datos_pacientes LIMIT ?';
+  db.all(query, limit, (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
